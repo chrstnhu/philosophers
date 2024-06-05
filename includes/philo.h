@@ -6,7 +6,7 @@
 /*   By: chrhu <chrhu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 17:04:04 by chrhu             #+#    #+#             */
-/*   Updated: 2024/06/05 14:08:08 by chrhu            ###   ########.fr       */
+/*   Updated: 2024/06/05 17:09:48 by chrhu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ typedef struct s_philo
 typedef struct s_data
 {
 	int				nb_philo;
-	int				nb_eat;
+	int				nb_meals;
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
@@ -58,35 +58,35 @@ typedef struct s_data
 	pthread_mutex_t	print;
 	pthread_mutex_t	dead_check;
 	pthread_mutex_t	meal_check;
-	pthread_mutex_t	eat_check;
+	pthread_mutex_t	all_ate_check;
 	pthread_mutex_t	lastmeal_check;
-	pthread_mutex_t	start_mutex;
-	int				start_flag;
 	t_philo			philo[NB_MAX];
 }	t_data;
 
-//Initialise
+// Number
+int			check_number(int argc, char **argv);
 int			ft_atoi(const char *nptr);
+
+// Initialize
 int			init_thread(t_data *data);
-void		*action(void *philosopher);
 int			init_mutex(t_data *data);
 int			init_philo(t_data *data);
 int			initialize(t_data *data, char **argv);
+void		thread_wait_destroy(t_data *data, t_philo *philo);
 
+// Execution
+void		*action(void *philosopher);
+void		philo_eating(t_philo *philo, t_data *data);
+
+// Calcul time
+void		ft_usleep(t_data *data, long long time);
 long long	get_time(void);
 void		print_status(t_data *data, int philo, const char *status, int dead);
-// void		philo_eating(t_philo *philo);
-void		philo_eating(t_philo *philo, t_data *data);
-void		philo_sleeping(t_data *data, t_philo *philo);
+
+// Check
 void		check_dead(t_data *data, t_philo *philo);
-void		ft_usleep(t_data *data, long long time);
-// void ft_usleep(t_data *data, int time_in_ms) ;
-
-void		handle_one_philo(t_data *data);
-void		thread_wait_destroy(t_data *data, t_philo *philo);
-int			check_number(int argc, char **argv);
-
-int			philo_no_dead(t_data *data);
-int			number_of_ate(t_data *data, int philo_id);
+int			philo_status(t_data *data);
+int			philo_all_ate(t_data *data);
+int			number_of_meals(t_data *data, int philo_id);
 
 #endif

@@ -6,12 +6,13 @@
 /*   By: chrhu <chrhu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 17:23:40 by chrhu             #+#    #+#             */
-/*   Updated: 2024/06/05 14:11:10 by chrhu            ###   ########.fr       */
+/*   Updated: 2024/06/05 17:02:56 by chrhu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
+// Philo eat, update last_meal and ate number 
 void	philo_eating(t_philo *philo, t_data *data)
 {
 	pthread_mutex_lock(&data->forks[philo->left_fork]);
@@ -30,10 +31,11 @@ void	philo_eating(t_philo *philo, t_data *data)
 	pthread_mutex_unlock(&data->forks[philo->left_fork]);
 }
 
+// Print the status of the philo
 void	print_status(t_data *data, int philo, const char *status, int dead)
 {
 	pthread_mutex_lock(&(data->print));
-	if (!philo_no_dead(data) || dead == 1)
+	if (!philo_status(data) || dead == 1)
 	{
 		printf("%lld %d ", get_time() - data->start_time, philo + 1);
 		printf("%s\n", status);
@@ -41,16 +43,17 @@ void	print_status(t_data *data, int philo, const char *status, int dead)
 	pthread_mutex_unlock(&(data->print));
 }
 
+// Usleep time (eat, sleep)
 void	ft_usleep(t_data *data, long long time)
 {
 	long long	start;
 
 	start = get_time();
-	while (!philo_no_dead(data) && (get_time() - start) < time)
+	while (!philo_status(data) && (get_time() - start) < time)
 		usleep(1000);
 }
 
-//Convert seconds and microseconds to millisecondes
+// Convert seconds and microseconds to millisecondes
 long long	get_time(void)
 {
 	struct timeval	tv;

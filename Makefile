@@ -1,28 +1,47 @@
+# Define colors
+GREEN = \033[0;32m
+YELLOW = \033[0;33m
+DEFAULT = \033[0m
+
+#SOURCES
 SRCS_PATH = srcs
+SRCS = action.c init.c main.c utils.c actions_utils.c
 
-SRCS = $(addprefix $(SRCS_PATH)/, action.c init.c philo.c utils.c actions_utils.c)
+OBJ_DIR = obj
+OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)
 
-OBJS = $(SRCS:.c=.o)
-
-CC = cc -g
+#COMPILE
+CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
 NAME = philo
 
-all: $(NAME)
+all: $(OBJ_DIR) $(NAME)
 
-$(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+$(NAME): $(OBJS) includes/philo.h
+	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+	@echo "$(YELLOW)$(CC) $(CFLAGS) $(OBJS) -o $(NAME)$(DEFAULT)"
+	@echo "$(GREEN)Executable '$(NAME)' has been created successfully!$(DEFAULT)"
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+$(OBJ_DIR)/%.o: $(SRCS_PATH)/%.c
+	@echo "$(YELLOW)$(CC) $(CFLAGS) -c $< -o $@$(DEFAULT)"
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR):
+	@echo "$(YELLOW)Create $(OBJ_DIR) directory $(DEFAULT)"
+	@mkdir -p $(OBJ_DIR)
 
 clean:
-	rm -f $(OBJS)
+	@echo "$(YELLOW)rm -rf $(OBJ_DIR)$(DEFAULT)"
+	@rm -rf $(OBJ_DIR)
+	@echo "$(GREEN)Cleaned up $(OBJ_DIR) !$(DEFAULT)"
 
 fclean: clean
-	rm -f $(NAME)
+	@echo "$(YELLOW)rm -f $(NAME)$(NC)"
+	@rm -f $(NAME)
+	@echo "$(GREEN)Removed executable '$(NAME)'!$(DEFAULT)"
 
 re: fclean all
 
 .PHONY: all clean fclean re
+

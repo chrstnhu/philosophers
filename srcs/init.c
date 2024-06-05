@@ -6,12 +6,13 @@
 /*   By: chrhu <chrhu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 17:20:15 by chrhu             #+#    #+#             */
-/*   Updated: 2024/06/05 14:15:17 by chrhu            ###   ########.fr       */
+/*   Updated: 2024/06/05 17:09:41 by chrhu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
+// Destroy thread and mutex
 void	thread_wait_destroy(t_data *data, t_philo *philo)
 {
 	int	i;
@@ -28,10 +29,11 @@ void	thread_wait_destroy(t_data *data, t_philo *philo)
 	pthread_mutex_destroy(&data->print);
 	pthread_mutex_destroy(&data->meal_check);
 	pthread_mutex_destroy(&data->dead_check);
-	pthread_mutex_destroy(&data->eat_check);
+	pthread_mutex_destroy(&data->all_ate_check);
 	pthread_mutex_destroy(&data->lastmeal_check);
 }
 
+// Initialize mutex
 int	init_mutex(t_data *data)
 {
 	int	i;
@@ -50,13 +52,12 @@ int	init_mutex(t_data *data)
 		return (1);
 	if (pthread_mutex_init(&data->lastmeal_check, NULL))
 		return (1);
-	if (pthread_mutex_init(&data->eat_check, NULL))
-		return (1);
-	if (pthread_mutex_init(&data->start_mutex, NULL))
+	if (pthread_mutex_init(&data->all_ate_check, NULL))
 		return (1);
 	return (0);
 }
 
+// Initialize philo
 int	init_philo(t_data *data)
 {
 	int	i;
@@ -77,6 +78,7 @@ int	init_philo(t_data *data)
 	return (0);
 }
 
+// Initialize structure
 int	initialize(t_data *data, char **argv)
 {
 	data->all_ate = false;
@@ -85,11 +87,9 @@ int	initialize(t_data *data, char **argv)
 	data->time_to_die = ft_atoi(argv[2]);
 	data->time_to_eat = ft_atoi(argv[3]);
 	data->time_to_sleep = ft_atoi(argv[4]);
-	data->nb_eat = -1;
-	data->start_flag = 0;
+	data->nb_meals = -1;
 	if (argv[5])
-		data->nb_eat = ft_atoi(argv[5]);
-	printf("nb eat : %d\n", data->nb_eat);
+		data->nb_meals = ft_atoi(argv[5]);
 	if (data->nb_philo > 250 || data->nb_philo < 0 || data->time_to_die < 0
 		|| data->time_to_eat < 0 || data->time_to_sleep < 0)
 		return (1);
