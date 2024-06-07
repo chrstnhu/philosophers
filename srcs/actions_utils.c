@@ -6,7 +6,7 @@
 /*   By: chrhu <chrhu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 17:23:40 by chrhu             #+#    #+#             */
-/*   Updated: 2024/06/05 17:02:56 by chrhu            ###   ########.fr       */
+/*   Updated: 2024/06/07 19:26:58 by chrhu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 void	philo_eating(t_philo *philo, t_data *data)
 {
 	pthread_mutex_lock(&data->forks[philo->left_fork]);
-	print_status(data, philo->philo, "has taken a fork", 0);
 	pthread_mutex_lock(&data->forks[philo->right_fork]);
+	print_status(data, philo->philo, "has taken a fork", 0);
 	print_status(data, philo->philo, "has taken a fork", 0);
 	pthread_mutex_lock(&data->lastmeal_check);
 	philo->last_meal = get_time();
@@ -34,10 +34,13 @@ void	philo_eating(t_philo *philo, t_data *data)
 // Print the status of the philo
 void	print_status(t_data *data, int philo, const char *status, int dead)
 {
+	long long	current_time;
+
+	current_time = get_time();
 	pthread_mutex_lock(&(data->print));
 	if (!philo_status(data) || dead == 1)
 	{
-		printf("%lld %d ", get_time() - data->start_time, philo + 1);
+		printf("%lld %d ", current_time - data->start_time, philo + 1);
 		printf("%s\n", status);
 	}
 	pthread_mutex_unlock(&(data->print));

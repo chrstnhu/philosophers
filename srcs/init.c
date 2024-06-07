@@ -6,7 +6,7 @@
 /*   By: chrhu <chrhu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 17:20:15 by chrhu             #+#    #+#             */
-/*   Updated: 2024/06/05 17:09:41 by chrhu            ###   ########.fr       */
+/*   Updated: 2024/06/07 19:27:23 by chrhu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ void	thread_wait_destroy(t_data *data, t_philo *philo)
 	pthread_mutex_destroy(&data->print);
 	pthread_mutex_destroy(&data->meal_check);
 	pthread_mutex_destroy(&data->dead_check);
-	pthread_mutex_destroy(&data->all_ate_check);
 	pthread_mutex_destroy(&data->lastmeal_check);
+	pthread_mutex_destroy(&data->all_ate_check);
 }
 
 // Initialize mutex

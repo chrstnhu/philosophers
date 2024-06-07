@@ -6,7 +6,7 @@
 /*   By: chrhu <chrhu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 17:20:13 by chrhu             #+#    #+#             */
-/*   Updated: 2024/06/05 17:09:35 by chrhu            ###   ########.fr       */
+/*   Updated: 2024/06/07 17:46:00 by chrhu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,30 +29,38 @@ static void	check_philo_ate(t_data *data)
 	}
 }
 
+long long	get_elapsed_time(int i, t_data *data, t_philo *philo)
+{
+	long long	elapsed_time;
+	long long	current_time;
+
+	current_time = get_time();
+	pthread_mutex_lock(&data->lastmeal_check);
+	elapsed_time = current_time - philo[i].last_meal;
+	pthread_mutex_unlock(&data->lastmeal_check);
+	return (elapsed_time);
+}
+
 // Check if philo dead
 void	check_dead(t_data *data, t_philo *philo)
 {
 	int			i;
-	long long	elapsed_time;
 
 	while ((philo_all_ate(data) != 1) && !philo_status(data))
 	{
-		i = 0;
-		while (i < data->nb_philo)
+		i = -1;
+		usleep(100);
+		while (++i < data->nb_philo)
 		{
-			usleep(100);
-			pthread_mutex_lock(&data->lastmeal_check);
-			elapsed_time = get_time() - philo[i].last_meal;
-			pthread_mutex_unlock(&data->lastmeal_check);
-			if (elapsed_time > data->time_to_die)
+			if (get_elapsed_time(i, data, philo) > data->time_to_die)
 			{
+				usleep(1000);
+				print_status(data, philo[i].philo, "died", 1);
 				pthread_mutex_lock(&data->dead_check);
 				data->philo_dead = true;
 				pthread_mutex_unlock(&data->dead_check);
-				print_status(data, philo[i].philo, "died", 1);
 				return ;
 			}
-			i++;
 		}
 		check_philo_ate(data);
 	}

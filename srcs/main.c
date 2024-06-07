@@ -6,7 +6,7 @@
 /*   By: chrhu <chrhu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 17:20:19 by chrhu             #+#    #+#             */
-/*   Updated: 2024/06/05 17:03:01 by chrhu            ###   ########.fr       */
+/*   Updated: 2024/06/07 19:47:59 by chrhu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@ int	main(int argc, char **argv)
 	}
 	else
 	{
-		printf("%sPlease enter 5/6arguments :", RED);
-		printf("./philo nb_of_philo time_to_die");
-		printf("time_to_eat time_to_sleep number_of_eat%s\n", DEFAULT);
+		printf("%sPlease enter 5/6 arguments :", RED);
+		printf("./philo number_of_philosopher time_to_die");
+		printf("time_to_eat time_to_sleep number_of_meals%s\n", DEFAULT);
 		return (1);
 	}
 	return (0);
