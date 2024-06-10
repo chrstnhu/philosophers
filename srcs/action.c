@@ -6,7 +6,7 @@
 /*   By: chrhu <chrhu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 17:20:13 by chrhu             #+#    #+#             */
-/*   Updated: 2024/06/07 17:46:00 by chrhu            ###   ########.fr       */
+/*   Updated: 2024/06/10 17:40:01 by chrhu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,5 +115,11 @@ int	init_thread(t_data *data)
 	}
 	check_dead(data, data->philo);
 	thread_wait_destroy(data, philo);
+	i = -1;
+	while (data->nb_meals > 0 && ++i < data->nb_philo)
+	{
+		printf("Philosopher : %d, ", philo[i].philo + 1);
+		printf("number of eat : %d\n", philo[i].philo_ate);
+	}
 	return (0);
 }
