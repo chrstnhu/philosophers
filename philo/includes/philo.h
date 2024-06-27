@@ -6,20 +6,17 @@
 /*   By: chrhu <chrhu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 17:04:04 by chrhu             #+#    #+#             */
-/*   Updated: 2024/06/07 14:58:19 by chrhu            ###   ########.fr       */
+/*   Updated: 2024/06/14 12:38:31 by chrhu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
-# include <sys/time.h>
-# include <stdint.h>
-# include <unistd.h>
+# include <sys/time.h> //gettimeofday
+# include <unistd.h> //usleep
 # include <stdio.h>
-# include <stdlib.h>
-# include <string.h>
-# include <pthread.h>
+# include <pthread.h> //mutex
 # include <stdbool.h>
 
 # define DEFAULT "\033[0;39m"
@@ -48,8 +45,8 @@ typedef struct s_data
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
+	int				time_to_think;
 	int				philo_eat;
-	int				philo_think;
 	int				philo_sleep;
 	bool			philo_dead;
 	bool			all_ate;
@@ -85,7 +82,7 @@ void		print_status(t_data *data, int philo, const char *status, int dead);
 
 // Check
 void		check_dead(t_data *data, t_philo *philo);
-int			philo_status(t_data *data);
+int			is_philo_dead(t_data *data);
 int			philo_all_ate(t_data *data);
 int			number_of_meals(t_data *data, int philo_id);
 

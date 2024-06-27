@@ -1,34 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   actions_utils.c                                    :+:      :+:    :+:   */
+/*   actions_utils_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: chrhu <chrhu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/28 17:23:40 by chrhu             #+#    #+#             */
-/*   Updated: 2024/06/07 19:26:58 by chrhu            ###   ########.fr       */
+/*   Created: 2024/06/01 17:23:40 by chrhu             #+#    #+#             */
+/*   Updated: 2024/06/27 18:41:15 by chrhu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philo.h"
+#include "../includes/philo_bonus.h"
 
-// Philo eat, update last_meal and ate number 
+// Philo take two forks and eat, update last_meal
 void	philo_eating(t_philo *philo, t_data *data)
 {
-	pthread_mutex_lock(&data->forks[philo->left_fork]);
-	pthread_mutex_lock(&data->forks[philo->right_fork]);
+	if (data->nb_philo == 1)
+	{
+		sem_wait(data->print);
+		printf("%lld 1 ", data->start_time - data->start_time);
+		printf("has taken a fork\n");
+		sem_post(data->print);
+		return ;
+	}
+	sem_wait(data->forks);
+	sem_wait(data->forks);
 	print_status(data, philo->philo, "has taken a fork", 0);
 	print_status(data, philo->philo, "has taken a fork", 0);
-	pthread_mutex_lock(&data->lastmeal_check);
-	philo->last_meal = get_time();
-	pthread_mutex_unlock(&data->lastmeal_check);
 	print_status(data, philo->philo, "is eating", 0);
+	sem_wait(data->lastmeal_check);
+	philo->last_meal = get_time();
+	sem_post(data->lastmeal_check);
 	ft_usleep(data, data->time_to_eat);
-	pthread_mutex_lock(&data->meal_check);
-	philo->philo_ate++;
-	pthread_mutex_unlock(&data->meal_check);
-	pthread_mutex_unlock(&data->forks[philo->right_fork]);
-	pthread_mutex_unlock(&data->forks[philo->left_fork]);
+	sem_post(data->forks);
+	sem_post(data->forks);
 }
 
 // Print the status of the philo
@@ -36,14 +41,31 @@ void	print_status(t_data *data, int philo, const char *status, int dead)
 {
 	long long	current_time;
 
+	sem_wait(data->print);
 	current_time = get_time();
-	pthread_mutex_lock(&(data->print));
-	if (!philo_status(data) || dead == 1)
+	if (dead == 1 && is_dead(data))
 	{
-		printf("%lld %d ", current_time - data->start_time, philo + 1);
-		printf("%s\n", status);
+		printf("%lld %d %s\n", current_time - data->start_time,
+			philo + 1, status);
+		return ;
 	}
-	pthread_mutex_unlock(&(data->print));
+	else if (dead == 0 && !is_dead(data) && !is_printed(data))
+	{
+		printf("%lld %d %s\n", current_time - data->start_time,
+			philo + 1, status);
+	}
+	sem_post(data->print);
+}
+
+// Return the status of death printed
+int	is_printed(t_data *data)
+{
+	int	print_status;
+
+	sem_wait(data->death_print);
+	print_status = data->death_printed;
+	sem_post(data->death_print);
+	return (print_status);
 }
 
 // Usleep time (eat, sleep)
@@ -52,8 +74,12 @@ void	ft_usleep(t_data *data, long long time)
 	long long	start;
 
 	start = get_time();
-	while (!philo_status(data) && (get_time() - start) < time)
+	while (!is_dead(data) && !is_printed(data))
+	{
+		if (get_time() - start > time)
+			break ;
 		usleep(1000);
+	}
 }
 
 // Convert seconds and microseconds to millisecondes

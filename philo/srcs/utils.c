@@ -6,7 +6,7 @@
 /*   By: chrhu <chrhu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 17:20:21 by chrhu             #+#    #+#             */
-/*   Updated: 2024/06/07 13:49:33 by chrhu            ###   ########.fr       */
+/*   Updated: 2024/06/13 19:01:17 by chrhu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,6 @@ int	philo_all_ate(t_data *data)
 	}
 	pthread_mutex_unlock(&data->all_ate_check);
 	return (0);
-}
-
-// Return if philo live or dead
-int	philo_status(t_data *data)
-{
-	int	philo_status;
-
-	pthread_mutex_lock(&(data->dead_check));
-	philo_status = data->philo_dead;
-	pthread_mutex_unlock(&(data->dead_check));
-	return (philo_status);
 }
 
 // Return the number of meals

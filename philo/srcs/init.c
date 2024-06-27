@@ -6,7 +6,7 @@
 /*   By: chrhu <chrhu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 17:20:15 by chrhu             #+#    #+#             */
-/*   Updated: 2024/06/10 17:40:34 by chrhu            ###   ########.fr       */
+/*   Updated: 2024/06/11 17:59:41 by chrhu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,9 @@ int	initialize(t_data *data, char **argv)
 	data->time_to_die = ft_atoi(argv[2]);
 	data->time_to_eat = ft_atoi(argv[3]);
 	data->time_to_sleep = ft_atoi(argv[4]);
+	data->time_to_think = -1;
+	if (data->time_to_eat >= data->time_to_sleep)
+		data->time_to_think = data->time_to_eat;
 	data->nb_meals = -1;
 	if (argv[5])
 		data->nb_meals = ft_atoi(argv[5]);
